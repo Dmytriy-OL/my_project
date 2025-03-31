@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Відгуки</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Магазин Одягу</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {% if user %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button">
+                        Мій профіль
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="/profile">Редагувати профіль</a></li>
+                        <li><a class="dropdown-item" href="/logout">Вийти</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-login nav-link me-2" href="/meny_login">Увійти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-register nav-link" href="/register">Зареєструватися</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2 class="text-center">Відгуки</h2>
+
+    {% if user %}
+    <form id="reviewForm" action="/add_review" method="POST" class="mb-4">
+        <div class="mb-3">
+            <label for="reviewText" class="form-label">Ваш відгук</label>
+            <textarea class="form-control" id="reviewText" name="text" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Залишити відгук</button>
+    </form>
+    {% else %}
+    <button class="btn btn-primary mb-4" id="leaveReviewButton">Залишити відгук</button>
+    <p class="text-center">Ви повинні увійти, щоб залишити відгук.</p>
+    {% endif %}
+
+    <button class="btn btn-secondary mb-4" onclick="window.location.href='/';">Повернутися на головну</button>
+
+    <div class="list-group">
+        {% for review in reviews %}
+        <div class="list-group-item">
+            <h5 class="mb-1">{{ review.name }} {{ review.surname }}</h5>
+            <p class="mb-1">{{ review.text }}</p>
+            <small>Лайків: <span id="likes-{{ review._id }}">{{ review.likes }}</span></small>
+            {% if user %}
+            <button class="btn btn-link" onclick="likeReview('{{ review._id }}')">Лайк</button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeo3lW0q84shlMGMw4blg6Yzq6XtW1W1yB9ARmgGQ2xB6YQo"
+        crossorigin="anonymous"></script>
+<script>
+    document.getElementById('leaveReviewButton')?.addEventListener('click', function() {
+        alert('Ви повинні увійти, щоб залишити відгук.');
+    });
+
+    function likeReview(reviewId) {
+        fetch('/like_review', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ review_id: reviewId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.likes !== undefined) {
+                document.getElementById('likes-' + reviewId).textContent = data.likes;
+            }
+        });
+    }
+</script>
+</body>
+</html>

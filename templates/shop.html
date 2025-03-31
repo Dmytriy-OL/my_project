@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин Одягу</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 80px;
+        }
+        .carousel-item img {
+            height: 500px;
+            object-fit: cover;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-body {
+            background-color: #f8f9fa;
+        }
+        .card-img-top {
+            height: 500px;
+            object-fit: cover;
+        }
+        .btn-login, .btn-register {
+            color: #fff !important;
+        }
+        .btn-login {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .btn-register {
+            background-color: #28a745;
+            border-color: #28a745;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-register:hover {
+            background-color: #218838;
+            border-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Магазин Одягу</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#why-choose-us">Чому ми?</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#products">Наші товари</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/reviews">Відгуки магазину</a></li>
+                {% if user %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button">
+                        Мій профіль
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+                        <li><a class="dropdown-item" href="/profile">Редагувати профіль</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="confirmLogout()">Вийти</a></li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-login nav-link me-2" href="/meny_login">Увійти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-register nav-link" href="/register">Зареєструватися</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://th.bing.com/th/id/R.f2558cc0a35c8c0431749faeb06bd496?rik=bwtefs1x844Myg&pid=ImgRaw&r=0"
+                 class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="https://www.shoppingmilanoroma.it/wp-content/uploads/2014/05/Roma-Hero2.jpg" class="d-block w-100"
+                 alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div id="why-choose-us" class="container my-5">
+    <h2 class="text-center mb-4">Чому обирати наш магазин?</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <h4>Великий вибір одягу</h4>
+            <p>Ми пропонуємо широкий вибір одягу для всієї родини.</p>
+        </div>
+        <div class="col-md-4">
+            <h4>Висока якість</h4>
+            <p>Наш одяг виготовляється з високоякісних матеріалів і технологій.</p>
+        </div>
+        <div class="col-md-4">
+            <h4>Зручний сервіс</h4>
+            <p>Ми надаємо зручний і швидкий сервіс доставки та обслуговування клієнтів.</p>
+        </div>
+    </div>
+</div>
+
+<div id="products" class="container my-5">
+    <h2 class="text-center mb-4">Наші товари</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://i.pinimg.com/originals/c4/f4/28/c4f42848aeaf83dd3fbafa01b894e678.jpg"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Жіноча сукня</h5>
+                    <p class="card-text">Чудова сукня для особливих випадків.</p>
+                    <a href="/commodity?category=Жіноча%20сукня" class="btn btn-primary">Дізнатися більше</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://www.next.ua/nxtcms/resource/image/6075474/portrait_ratio5x7/400/560/3551359c6f9c115115628010a37dec86/C27A56EEAC0AA65CBDA1F3D1876FEE50/casual-shirts.jpg"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Повсякденні сорочки</h5>
+                    <p class="card-text">Стильно і зручно.</p>
+                    <a href="/commodity?category=Повсякденні%20сорочки" class="btn btn-primary">Дізнатися більше</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://content1.rozetka.com.ua/goods/images/big_tile/438075372.jpg"
+                     class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Чоловічі кофти</h5>
+                    <p class="card-text">Стильний і зручний вибір для офіційного образу.</p>
+                    <a href="/commodity?category=Чоловічі%20кофти" class="btn btn-primary">Дізнатися більше</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz4fnFO9gybWg6XbDUjvB3a1w1j7lJ4QeQigtgt6Qw2i5DkLtS3qm9EkfJ"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-pprn3073KE6tl6K/A9fTV6lpQU4qd/cgk5aK/6vzoYzq5EfuBO5hpQ2hK7AR4p7E"
+        crossorigin="anonymous"></script>
+
+<script>
+    function confirmLogout() {
+        if (confirm('Ви впевнені, що хочете вийти з акаунту?')) {
+            window.location.href = "/logout";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        if (!Cookies.get("cookieConsent")) {
+            let popup = document.createElement("div");
+            popup.id = "cookie-popup";
+            popup.innerHTML = `
+                <div class="cookie-content">
+                    <p>Цей сайт використовує файли cookie для забезпечення найкращого досвіду. Продовжуючи, ви погоджуєтесь з нашою <a href="/privacy-policy">Політикою конфіденційності</a>.</p>
+                    <button id="accept-cookies" class="btn btn-primary">Прийняти</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+
+            document.getElementById("accept-cookies").addEventListener("click", function () {
+                Cookies.set("cookieConsent", "true", { expires: 365 });
+                popup.remove();
+            });
+        }
+    });
+</script>
+<style>
+    #cookie-popup {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 20px;
+        z-index: 9999;
+        width: 90%;
+        max-width: 500px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .cookie-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .cookie-content p {
+        margin: 0;
+        font-size: 14px;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    .cookie-content a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .cookie-content a:hover {
+        text-decoration: underline;
+    }
+
+    #accept-cookies {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+        margin-left: 20px;
+    }
+
+    #accept-cookies:hover {
+        background-color: #218838;
+        border-color: #218838;
+        transform: translateY(-2px);
+    }
+</style>
+</body>
+</html>
