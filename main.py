@@ -1,15 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import database
+from flasgger import Swagger
 import classes
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Додайте свій секретний ключ
-
-@app.route('/reviews')
-def reviews_page():
-    user = session.get('user')
-    reviews = database.review.get_all_reviews()
-    return render_template('reviews.html', reviews=reviews, user=user)
+swagger = Swagger(app)
 
 @app.route('/add_review', methods=['POST'])
 def add_review_route():
@@ -19,15 +15,6 @@ def add_review_route():
         user_info = database.users.searching_user(user)  # Використовуємо ім'я користувача з сесії
         database.review.add_review(user_info['name'], user_info['surname'], text)
     return redirect(url_for('reviews_page'))
-
-@app.route('/like_review', methods=['POST'])
-def like_review_route():
-    user = session.get('user')
-    if user:
-        review_id = request.json['review_id']
-        likes = database.review.like_review(review_id)
-        return jsonify({'likes': likes})
-    return jsonify({'error': 'Unauthorized'}), 401
 
 @app.route('/logout')
 def logout():
@@ -170,5 +157,72 @@ def order():
         price = request.form['price']
         return render_template('order.html', category=category, name=name, price=price)
 
+
+@app.route('/reviews', methods=['GET'])
+def reviews_page():
+    """
+    Отримати список відгуків
+    ---
+    tags:
+      - Відгуки
+    responses:
+      200:
+        description: Успішно отримано список відгуків
+        schema:
+          type: object
+          properties:
+            reviews:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Ім'я користувача
+                  surname:
+                    type: string
+                    description: Прізвище користувача
+                  text:
+                    type: string
+                    description: Текст відгуку
+    """
+    user = session.get('user')
+    reviews = database.review.get_all_reviews()
+    return render_template('reviews.html', reviews=reviews, user=user)
+
+@app.route('/like_review', methods=['POST'])
+def like_review_route():
+    """
+    Лайк відгуку
+    ---
+    tags:
+      - Відгуки
+    parameters:
+      - name: review_id
+        in: body
+        type: integer
+        required: true
+        description: ID відгуку
+    responses:
+      200:
+        description: Успішно лайкнуто відгук
+        schema:
+          type: object
+          properties:
+            likes:
+              type: integer
+              description: Новий кількість лайків
+      401:
+        description: Користувач не авторизований
+    """
+    user = session.get('user')
+    if user:
+        review_id = request.json.get('review_id')
+        likes = database.review.like_review(review_id)
+        return jsonify({'likes': likes})
+    return jsonify({'error': 'Unauthorized'}), 401
+
+
 if __name__ == '__main__':
+    print("Запустіть додаток і перегляньте API-документацію за адресою: http://127.0.0.1:5000/apidocs/")
     app.run(debug=True)
